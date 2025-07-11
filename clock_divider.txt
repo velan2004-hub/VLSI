@@ -1,0 +1,35 @@
+module clock_divider(clock_in, clock_out);
+  input clock_in;
+  output reg clock_out;
+  reg[27:0] counter=28'd0;
+    parameter divisor=28'd2;
+    always@(posedge clock_in)
+      begin
+        counter <=counter + 28'd1;
+        if(counter>=(divisor-1))
+          counter = 28'd0;
+        clock_out <= (counter<divisor/2)?1'b1:1'b0;
+       end
+       endmodule
+
+
+test tube 
+
+
+
+
+module tb_clock_divider;
+  reg clock_in;
+  wire clock_out;
+  clock_divider uut (
+    .clock_in(clock_in),
+    .clock_out(clock_out)
+  );
+  initial begin
+    forever #10 clock_in = ~clock_in;
+  end
+  initial begin
+    $dumpfile("divider.vcd");
+    $dumpvars(1);
+  end
+endmodule
